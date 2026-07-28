@@ -1,48 +1,75 @@
+# React + TypeScript + Vite
 
-# React - Props & Conditional Rendering
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Requirements:
+Currently, two official plugins are available:
 
--   You must use `TypeScript`.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
--   You can use `cra` / `vite` to create a React App.
-    - (`vite` recommended)
+## React Compiler
 
--   You can use the given `CSS` or apply your own. (Optional)
-    - `SCSS` is also optional 
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
--   Provide 1 commit per task.
+## Expanding the ESLint configuration
 
--   You can choose your own file names
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
--   You can create `PRs` and send it to me in case you have some questions.
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-## Questions:
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
--   In this exercise you will create the following components:
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-    -   A main App component to render every other child component.
+```
 
-    -   A component to display today's Date. (Coming from App as `Props`)
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-    -   A component to display User's Profile Information. (Name, Email, Gender)
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-        -   It has 2 more components: 1 for `ProfileHeader` and 1 for `ProfileDetails`. (Coming from App as `Props`).
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-            -   Inside `ProfileDetails` you need to render Name and Email as `H4` tags and render an `img` which is conditionally showing an icon of male / female based on the gender. (You choose any image / icon)
-
-        -   A component to display User's list of visited countries.
-
-            ```js
-            const countriesVisited: { name: string, rating: number }[] = [
-            	{ name: "Spain", rating: 7 },
-            	{ name: "Brazil", rating: 7 },
-            	{ name: "Japan", rating: 7 },
-            ];
-            ```
-
-## Below is an example of the UI, feel free to come up with your own design:
-
-![demo](./docs/demo.png)
-
-### Good Luck! 👍🏻
+```
